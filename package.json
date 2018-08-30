@@ -1,0 +1,30 @@
+{
+  "name": "plots",
+  "version": "1.0.0",
+  "description": "first plotly practice",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brandongatlin/plots.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brandongatlin/plots/issues"
+  },
+  "homepage": "https://github.com/brandongatlin/plots#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "chalk-animation": "^1.6.0",
+    "express": "^4.16.3",
+    "express-handlebars": "^3.0.0",
+    "moment": "^2.22.2",
+    "mysql2": "^1.6.1",
+    "plotly": "^1.0.6",
+    "sequelize": "^4.38.0"
+  }
+}
