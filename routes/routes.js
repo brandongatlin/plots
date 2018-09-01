@@ -19,13 +19,13 @@ module.exports = function ( app ) {
         let hbsObj = {
           sps: sps
         }
-        console.log( sps );
+        // console.log( sps );
         res.render( "./layouts/main", hbsObj );
       } )
   } );
 
   app.post( "/new", function ( req, res ) {
-    console.log( req.body );
+    // console.log( req.body );
 
     db
       .ServiceProvider
@@ -37,7 +37,7 @@ module.exports = function ( app ) {
   } )
 
   app.post( "/post", function ( req, res ) {
-    console.log( req.body );
+    // console.log( req.body );
 
     let now = new Date();
     let status = req.body.status;
@@ -51,7 +51,7 @@ module.exports = function ( app ) {
         .Transaction
         .create( { ServiceProviderId: req.body.ServiceProviderId, Amount: req.body.amount, Posted: now } )
         .then( function ( newTransaction ) {
-          console.log( 'new transation is', newTransaction );
+          // console.log( 'new transation is', newTransaction );
         } )
     }
 
@@ -60,7 +60,7 @@ module.exports = function ( app ) {
         .Transaction
         .create( { ServiceProviderId: req.body.ServiceProviderId, Amount: req.body.amount, Failed: now } )
         .then( function ( newTransaction ) {
-          console.log( 'new transation is', newTransaction );
+          // console.log( 'new transation is', newTransaction );
         } )
     }
 
@@ -69,7 +69,7 @@ module.exports = function ( app ) {
         .Transaction
         .create( { ServiceProviderId: req.body.ServiceProviderId, Amount: req.body.amount, Queue: now } )
         .then( function ( newTransaction ) {
-          console.log( 'new transation is', newTransaction );
+          // console.log( 'new transation is', newTransaction );
         } )
     }
 
@@ -82,15 +82,14 @@ module.exports = function ( app ) {
       .Transaction
       .findAll()
       .then( function ( rates ) {
-        console.log( 'rates', rates );
+        // console.log( 'rates', rates );
         res.json( rates );
       } )
   } );
 
   app.get( "/totaldollars", function ( req, res ) {
-    // console.log( 'total dollar req.body', req.body );
 
-    let now = moment()
+    let today = moment()
       .utc()
       .format();
     let lastWeek = moment()
@@ -98,17 +97,47 @@ module.exports = function ( app ) {
       .subtract( 7, 'days' )
       .format();
 
-    console.log( 'now is ----------------------------------------------------', now );
-    console.log( 'last week was:', lastWeek );
+    let todayYear = moment().year();
+    let lastWeekYear = moment()
+      .subtract( 7, 'days' )
+      .format( "YYYY" );
+
+    let thisMonth = moment().format( "MM" );
+    let lastWeekMonth = moment()
+      .subtract( 7, 'days' )
+      .format( "MM" );
+
+    let todayDate = moment().format( "DD" );
+    let lastWeekDate = moment()
+      .subtract( 7, 'days' )
+      .format( "DD" );
+
+    // let todayTimeTemplate = todayYear + '-' + thisMonth + '-' + todayDate + 'T13:00:00Z'; 8am CST
+    let lastWeekStartOfDay = lastWeekYear + '-' + lastWeekMonth + '-' + lastWeekDate + 'T12:00:00Z'; //8am CST
+    let lastWeekEndOfDay = lastWeekYear + '-' + lastWeekMonth + '-' + lastWeekDate + 'T22:00:00Z'; //5pm CST
+
+    console.log( lastWeekStartOfDay );
+    console.log( lastWeekEndOfDay );
 
     db
       .Transaction
       .findAll( {
         where: {
           Posted: {
-            [ Op.ne ]: null
-          }
-        }
+            [ Op.between ]: [ lastWeekStartOfDay, lastWeekEndOfDay ]
+          },
+          // Posted: {
+          //   [ Op.between ]: [
+          //     moment()
+          //       .utc()
+          //       .format(),
+          //     moment()
+          //       .utc()
+          //       .subtract( 1, 'days' )
+          //       .format()
+          //   ]
+          // }
+        } //end where statement
       } )
       .then( function ( totalDollarsData ) {
         // console.log( 'total dollars data', totalDollarsData );

@@ -174,6 +174,73 @@ $( "#chart-button-3" ).on( "click", function ( event ) {
   $.get( "/totaldollars", function ( data ) {
     console.log( 'total dollars data', data );
 
+    //data is array of object for transactions meeting my criteria. I need to sort them into hour buckets, then average each bucket, storing that avg. in a var. that var will be plugged in to yData[1].
+
+    //sort => they'll be sorted by hour. ie 8am is 1200 to 1259 zulu. I'll have to reduce (I think) to get all the times out, then proceed. I'll store them in an array, but I'll need to keep they're dollar values associated with them.
+
+    let eightBucket = [];
+    let nineBucket = [];
+    let tenBucket = [];
+    let elevenBucket = [];
+    let noonBucket = [];
+    let oneBucket = [];
+    let twoBucket = [];
+    let threeBucket = [];
+    let fourBucket = [];
+    let fiveBucket = [];
+
+    for ( var i = 0; i < data.length; i++ ) {
+      let arrayTimes = data[ i ]
+        .Posted
+        .split( '' );
+
+      for ( var j = 0; j < arrayTimes[ i ].length; j++ ) {
+
+        if ( ( arrayTimes[ 11 ] == 1 ) && ( arrayTimes[ 12 ] == 2 ) ) {
+          eightBucket.push( data[ i ].Amount );
+        } else if ( ( arrayTimes[ 11 ] == 1 ) && ( arrayTimes[ 12 ] == 3 ) ) {
+          nineBucket.push( data[ i ].Amount );
+        } else if ( ( arrayTimes[ 11 ] == 1 ) && ( arrayTimes[ 12 ] == 4 ) ) {
+          tenBucket.push( data[ i ].Amount );
+        } else if ( ( arrayTimes[ 11 ] == 1 ) && ( arrayTimes[ 12 ] == 5 ) ) {
+          elevenBucket.push( data[ i ].Amount );
+        } else if ( ( arrayTimes[ 11 ] == 1 ) && ( arrayTimes[ 12 ] == 6 ) ) {
+          noonBucket.push( data[ i ].Amount );
+        } else if ( ( arrayTimes[ 11 ] == 1 ) && ( arrayTimes[ 12 ] == 7 ) ) {
+          oneBucket.push( data[ i ].Amount );
+        } else if ( ( arrayTimes[ 11 ] == 1 ) && ( arrayTimes[ 12 ] == 8 ) ) {
+          twoBucket.push( data[ i ].Amount );
+        } else if ( ( arrayTimes[ 11 ] == 1 ) && ( arrayTimes[ 12 ] == 9 ) ) {
+          threeBucket.push( data[ i ].Amount );
+        } else if ( ( arrayTimes[ 11 ] == 2 ) && ( arrayTimes[ 12 ] == 0 ) ) {
+          fourBucket.push( data[ i ].Amount );
+        } else if ( ( arrayTimes[ 11 ] == 2 ) && ( arrayTimes[ 12 ] == 1 ) ) {
+          fiveBucket.push( data[ i ].Amount );
+        }
+
+      } // end j loop
+    } // end i loop
+
+    let bucketsConcat = eightBucket.concat( nineBucket, tenBucket, elevenBucket, noonBucket, oneBucket, twoBucket, threeBucket, fourBucket, fiveBucket );
+
+    console.log( bucketsConcat );
+
+    let bucketsSum = bucketsConcat.reduce( ( a, b ) => a + b, 0 );
+
+    let lastWeekAvg = bucketsSum / bucketsConcat.length;
+    console.log( lastWeekAvg );
+
+    let eightSum = eightBucket.reduce( ( a, b ) => a + b, 0 );
+    let nineSum = nineBucket.reduce( ( a, b ) => a + b, 0 );
+    let tenSum = tenBucket.reduce( ( a, b ) => a + b, 0 );
+    let elevenSum = elevenBucket.reduce( ( a, b ) => a + b, 0 );
+    let noonSum = noonBucket.reduce( ( a, b ) => a + b, 0 );
+    let oneSum = oneBucket.reduce( ( a, b ) => a + b, 0 );
+    let twoSum = twoBucket.reduce( ( a, b ) => a + b, 0 );
+    let threeSum = threeBucket.reduce( ( a, b ) => a + b, 0 );
+    let fourSum = fourBucket.reduce( ( a, b ) => a + b, 0 );
+    let fiveSum = fiveBucket.reduce( ( a, b ) => a + b, 0 );
+
     var xData = [
       [
         '8am',
@@ -204,31 +271,32 @@ $( "#chart-button-3" ).on( "click", function ( event ) {
     var yData = [
       [
         74,
-        82,
-        80,
-        74,
-        73,
-        72,
-        74,
-        70,
-        70,
-        66,
-        66,
-        70
-      ],
-      [
-        45,
-        42,
         50,
-        46,
-        36,
-        36,
-        34,
-        35,
-        32,
-        31,
-        31,
-        28
+        80,
+        99,
+        73,
+        172,
+        44,
+        70,
+        170,
+        66,
+        // 150,
+        // 151
+      ],
+
+      //last week data points
+      [
+        eightSum, //8am
+        nineSum,
+        tenSum,
+        elevenSum,
+        noonSum, //NOON
+        oneSum,
+        twoSum,
+        threeSum,
+        fourSum,
+        fiveSum, //5pm
+        // lastWeekAvg
       ]
     ];
 
@@ -241,7 +309,7 @@ $( "#chart-button-3" ).on( "click", function ( event ) {
     var data = [];
 
     for ( var i = 0; i < xData.length; i++ ) {
-      var todayTrace = {
+      var traceData = {
         x: xData[i],
         y: yData[i],
         type: 'scatter',
@@ -249,29 +317,32 @@ $( "#chart-button-3" ).on( "click", function ( event ) {
         line: {
           color: colors[i],
           width: lineSize[ i ]
-        }
+        },
+        name: labels[ i ]
       };
-      var lastWeekTrace = {
-        x: [
-          xData[ i ][0], xData[ i ][ 11 ]
-        ],
-        y: [
-          yData[ i ][0], yData[ i ][ 11 ]
-        ],
-        type: 'scatter',
-        mode: 'markers',
-        marker: {
-          color: colors[i],
-          size: 12
-        }
-      };
-      data.push( todayTrace, lastWeekTrace );
+      // var lastWeekTrace = {
+      //   x: [xData[ i ][ 0 ]],
+      //   y: [yData[ i ][ 0 ]],
+      //   type: 'scatter',
+      //   mode: 'markers',
+      //   marker: {
+      //     color: colors[i],
+      //     size: 12
+      //   }
+      // };
+      data.push( traceData );
     }
 
     var layout = {
-      showlegend: false,
+      showlegend: true,
+      legend: {
+        font: {
+          size: 25,
+          color: labels[ i ]
+        }
+      },
       height: 500,
-      width: 900,
+      width: 1200,
       xaxis: {
         showline: true,
         showgrid: false,
@@ -306,25 +377,25 @@ $( "#chart-button-3" ).on( "click", function ( event ) {
         {
           xref: 'paper',
           yref: 'paper',
-          x: 0.0,
+          x: 0.10, //position of title
           y: 1.05,
           xanchor: 'left',
           yanchor: 'bottom',
-          text: '$ Processed',
+          text: '$ Processed per Hour',
           font: {
             family: 'Arial',
             size: 30,
-            color: 'rgb(37,37,37)'
+            color: 'rgb(37,37,37)' //color of title
           },
           showarrow: false
         }, {
           xref: 'paper',
           yref: 'paper',
-          x: 0.5,
+          x: 0.5, //position of subtext below graph
           y: -0.1,
           xanchor: 'center',
           yanchor: 'top',
-          text: 'Total Dollars Processed Today vs. Same Day Last Week',
+          text: 'Total Dollars Processed per Hour Today vs. Same Day Last Week',
           showarrow: false,
           font: {
             family: 'Arial',
@@ -335,40 +406,46 @@ $( "#chart-button-3" ).on( "click", function ( event ) {
       ]
     };
 
-    for ( var i = 0; i < xData.length; i++ ) {
-      var todayTrace = {
-        xref: 'paper',
-        x: 0.05,
-        y: yData[ i ][0],
-        xanchor: 'right',
-        yanchor: 'middle',
-        text: labels[ i ] + ' ' + '$' + yData[ i ][0],
-        showarrow: false,
-        font: {
-          family: 'Arial',
-          size: 16,
-          color: 'black'
-        }
-      };
-      var lastWeekTrace = {
-        xref: 'paper',
-        x: 0.95,
-        y: yData[ i ][11],
-        xanchor: 'left',
-        yanchor: 'middle',
-        text: '$' + yData[ i ][11],
-        font: {
-          family: 'Arial',
-          size: 16,
-          color: 'black'
-        },
-        showarrow: false
-      };
+    // for ( var i = 0; i < xData.length; i++ ) {
 
-      layout
-        .annotations
-        .push( todayTrace, lastWeekTrace );
-    }
+    //start of traces marking data
+    // var todayTrace = {
+    //   xref: 'paper',
+    //   x: 0.05,
+    //   y: yData[ i ][0],
+    //   xanchor: 'right',
+    //   yanchor: 'middle',
+    //    text: labels[ i ] + ' ' + '$' + yData[ i ][0],
+    //   text: labels[i],
+    //   showarrow: false,
+    //   font: {
+    //     family: 'Arial',
+    //     size: 16,
+    //     color: colors[ i ]
+    //   }
+    // };
+
+    //end of traces marking data
+    // var lastWeekTrace = {
+    //   xref: 'paper',
+    //   x: 0.95,
+    //   y: yData[ i ][9],
+    //   xanchor: 'left',
+    //   yanchor: 'middle',
+    //    text: '$' + yData[ i ][11],
+    //   text: labels[i],
+    //   font: {
+    //     family: 'Arial',
+    //     size: 16,
+    //     color: colors[ i ]
+    //   },
+    //   showarrow: false
+    // };
+
+    // layout
+    //   .annotations
+    //   .push( todayTrace, lastWeekTrace );
+    // }
 
     Plotly.newPlot( 'chart', data, layout );
   } )
