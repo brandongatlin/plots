@@ -97,7 +97,8 @@ $( "#sfq-pie" ).on( "click", function ( e ) {
     var layout = {
       title: 'Rates by # Transactions',
       height: 400,
-      width: 500
+      width: 500,
+      hovermode: false
     };
 
     Plotly.newPlot( 'chart', pieData, layout );
@@ -158,7 +159,9 @@ $( "#chart-button-2" ).on( "click", function ( e ) {
     var layout = {
       title: 'Rates by $',
       height: 400,
-      width: 500
+      width: 500,
+      hovermode: false
+
     };
 
     Plotly.newPlot( 'chart', pieData, layout );
@@ -266,18 +269,16 @@ $( "#chart-button-3" ).on( "click", function ( event ) {
 
     var yData = [
       [
-        74,
+        10,
+        15,
+        25,
+        40,
+        30,
+        90,
         50,
-        80,
-        99,
-        73,
-        172,
-        44,
-        70,
-        170,
-        66,
-        // 150,
-        // 151
+        20,
+        45,
+        35
       ],
 
       //last week data points
