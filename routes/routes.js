@@ -112,9 +112,16 @@ module.exports = function ( app ) {
       .subtract( 7, 'days' )
       .format( "DD" );
 
-    // let todayTimeTemplate = todayYear + '-' + thisMonth + '-' + todayDate + 'T13:00:00Z'; 8am CST
-    let lastWeekStartOfDay = lastWeekYear + '-' + lastWeekMonth + '-' + lastWeekDate + 'T12:00:00Z'; //8am CST
-    let lastWeekEndOfDay = lastWeekYear + '-' + lastWeekMonth + '-' + lastWeekDate + 'T22:00:00Z'; //5pm CST
+    let startHour = 'T13:00:00Z';
+    let endHour = 'T22:00:00Z';
+
+    if ( moment().isDST() ) {
+      startHour = 'T12:00:00Z';
+      endHour = 'T22:00:00Z';
+    };
+
+    let lastWeekStartOfDay = lastWeekYear + '-' + lastWeekMonth + '-' + lastWeekDate + startHour; //8am CST
+    let lastWeekEndOfDay = lastWeekYear + '-' + lastWeekMonth + '-' + lastWeekDate + endHour; //5pm CST
 
     console.log( lastWeekStartOfDay );
     console.log( lastWeekEndOfDay );
