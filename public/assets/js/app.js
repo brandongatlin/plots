@@ -174,10 +174,6 @@ $( "#chart-button-3" ).on( "click", function ( event ) {
   $.get( "/totaldollars", function ( data ) {
     console.log( 'total dollars data', data );
 
-    //data is array of object for transactions meeting my criteria. I need to sort them into hour buckets, then average each bucket, storing that avg. in a var. that var will be plugged in to yData[1].
-
-    //sort => they'll be sorted by hour. ie 8am is 1200 to 1259 zulu. I'll have to reduce (I think) to get all the times out, then proceed. I'll store them in an array, but I'll need to keep they're dollar values associated with them.
-
     let eightBucket = [];
     let nineBucket = [];
     let tenBucket = [];
@@ -320,16 +316,7 @@ $( "#chart-button-3" ).on( "click", function ( event ) {
         },
         name: labels[ i ]
       };
-      // var lastWeekTrace = {
-      //   x: [xData[ i ][ 0 ]],
-      //   y: [yData[ i ][ 0 ]],
-      //   type: 'scatter',
-      //   mode: 'markers',
-      //   marker: {
-      //     color: colors[i],
-      //     size: 12
-      //   }
-      // };
+
       data.push( traceData );
     }
 
@@ -406,47 +393,6 @@ $( "#chart-button-3" ).on( "click", function ( event ) {
       ]
     };
 
-    // for ( var i = 0; i < xData.length; i++ ) {
-
-    //start of traces marking data
-    // var todayTrace = {
-    //   xref: 'paper',
-    //   x: 0.05,
-    //   y: yData[ i ][0],
-    //   xanchor: 'right',
-    //   yanchor: 'middle',
-    //    text: labels[ i ] + ' ' + '$' + yData[ i ][0],
-    //   text: labels[i],
-    //   showarrow: false,
-    //   font: {
-    //     family: 'Arial',
-    //     size: 16,
-    //     color: colors[ i ]
-    //   }
-    // };
-
-    //end of traces marking data
-    // var lastWeekTrace = {
-    //   xref: 'paper',
-    //   x: 0.95,
-    //   y: yData[ i ][9],
-    //   xanchor: 'left',
-    //   yanchor: 'middle',
-    //    text: '$' + yData[ i ][11],
-    //   text: labels[i],
-    //   font: {
-    //     family: 'Arial',
-    //     size: 16,
-    //     color: colors[ i ]
-    //   },
-    //   showarrow: false
-    // };
-
-    // layout
-    //   .annotations
-    //   .push( todayTrace, lastWeekTrace );
-    // }
-
     Plotly.newPlot( 'chart', data, layout );
-  } )
-} )
+  } );
+} );
