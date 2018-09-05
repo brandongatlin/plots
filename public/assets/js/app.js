@@ -81,7 +81,7 @@ $( "#sfq-pie" ).on( "click", function ( e ) {
     var pieData = [
       {
         marker: {
-          colors: [ '#6fff33', '#ff3347', 'yellow' ]
+          colors: [ '#6fff33', '#ff3347', '#fbff33' ]
         },
         values: [
           successAvg, failAvg, queuedAvg
@@ -143,7 +143,7 @@ $( "#chart-button-2" ).on( "click", function ( e ) {
     var pieData = [
       {
         marker: {
-          colors: [ '#6fff33', '#ff3347', 'yellow' ]
+          colors: [ '#6fff33', '#ff3347', '#fbff33' ]
         },
         values: [
           successAvg, failAvg, queuedAvg

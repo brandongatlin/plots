@@ -46,34 +46,74 @@ module.exports = function ( app ) {
     //   ServiceProviderId: req.body.ServiceProviderId, Amount: req.body.amount, status: status
     // })
 
-    if ( status == "Posted" ) {
-      db
-        .Transaction
-        .create( { ServiceProviderId: req.body.ServiceProviderId, Amount: req.body.amount, Posted: now } )
-        .then( function ( newTransaction ) {
-          // console.log( 'new transation is', newTransaction );
-        } )
-    }
+    // switch (expression) {
+    //   case expression:
+    //
+    //     break;
+    //   default:
+    //
+    // }
 
-    if ( status == "Failed" ) {
-      db
-        .Transaction
-        .create( { ServiceProviderId: req.body.ServiceProviderId, Amount: req.body.amount, Failed: now } )
-        .then( function ( newTransaction ) {
-          // console.log( 'new transation is', newTransaction );
-        } )
-    }
+    switch ( status ) {
+      case "Posted":
+        db
+          .Transaction
+          .create( { ServiceProviderId: req.body.ServiceProviderId, Amount: req.body.amount, Posted: now } )
+          .then( function ( newTransaction ) {
+            // console.log( 'new transation is', newTransaction );
+          } );
+        break;
 
-    if ( status == "Queue" ) {
-      db
-        .Transaction
-        .create( { ServiceProviderId: req.body.ServiceProviderId, Amount: req.body.amount, Queue: now } )
-        .then( function ( newTransaction ) {
-          // console.log( 'new transation is', newTransaction );
-        } )
-    }
+      case "Failed":
+        db
+          .Transaction
+          .create( { ServiceProviderId: req.body.ServiceProviderId, Amount: req.body.amount, Failed: now } )
+          .then( function ( newTransaction ) {
+            // console.log( 'new transation is', newTransaction );
+          } );
+        break;
+
+      case "Queue":
+        db
+          .Transaction
+          .create( { ServiceProviderId: req.body.ServiceProviderId, Amount: req.body.amount, Queue: now } )
+          .then( function ( newTransaction ) {
+            // console.log( 'new transation is', newTransaction );
+          } );
+        break;
+
+      default:
+        alert( "oops!" );
+
+    } //end of switch
 
   } ); //end app.post /post
+
+  // if ( status == "Posted" ) {
+  //   db
+  //     .Transaction
+  //     .create( { ServiceProviderId: req.body.ServiceProviderId, Amount: req.body.amount, Posted: now } )
+  //     .then( function ( newTransaction ) {
+  //        console.log( 'new transation is', newTransaction );
+  //     } )
+  // }
+  //
+  // if ( status == "Failed" ) {
+  //   db
+  //     .Transaction
+  //     .create( { ServiceProviderId: req.body.ServiceProviderId, Amount: req.body.amount, Failed: now } )
+  //     .then( function ( newTransaction ) {
+  //        console.log( 'new transation is', newTransaction );
+  //     } )
+  // }
+  //
+  // if ( status == "Queue" ) {
+  //   db
+  //     .Transaction
+  //     .create( { ServiceProviderId: req.body.ServiceProviderId, Amount: req.body.amount, Queue: now } )
+  //     .then( function ( newTransaction ) {
+  //        console.log( 'new transation is', newTransaction );
+  //     } ) }
 
   //Plots
   //pie charts
@@ -89,13 +129,13 @@ module.exports = function ( app ) {
 
   app.get( "/totaldollars", function ( req, res ) {
 
-    let today = moment()
-      .utc()
-      .format();
-    let lastWeek = moment()
-      .utc()
-      .subtract( 7, 'days' )
-      .format();
+    // let today = moment()
+    //   .utc()
+    //   .format();
+    // let lastWeek = moment()
+    //   .utc()
+    //   .subtract( 7, 'days' )
+    //   .format();
 
     let todayYear = moment().year();
     let lastWeekYear = moment()
