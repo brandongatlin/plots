@@ -166,30 +166,56 @@ module.exports = function ( app ) {
     console.log( lastWeekStartOfDay );
     console.log( lastWeekEndOfDay );
 
+    //get today's stuff: can i pass 4 things to between? get 1 hour each time, but each time increment by 1 hr, then keep old data and add on to it. Not sure that would work. After refresh, the old hours would go away?
+
+    //findAll between starttime and now!! that would be accurate even on refresh and is simple.
+
+    //start testing
+
+    let todayStartOfDay = todayYear + '-' + thisMonth + '-' + todayDate + startHour;
+
     db
       .Transaction
       .findAll( {
         where: {
           Posted: {
-            [ Op.between ]: [ lastWeekStartOfDay, lastWeekEndOfDay ]
-          },
-          // Posted: {
-          //   [ Op.between ]: [
-          //     moment()
-          //       .utc()
-          //       .format(),
-          //     moment()
-          //       .utc()
-          //       .subtract( 1, 'days' )
-          //       .format()
-          //   ]
-          // }
-        } //end where statement
+            [ Op.between ]: [ todayStartOfDay, moment()
+                .utc()
+                .format() ]
+          }
+        }
       } )
-      .then( function ( totalDollarsData ) {
-        // console.log( 'total dollars data', totalDollarsData );
-        res.json( totalDollarsData )
+      .then( function ( totalTodayData ) {
+        console.log( "today's up to the hour info", totalTodayData );
+        res.json( totalTodayData )
+
       } )
+
+    //end testing - this works, but I must find a way to combine both db querries. what i need is, posted between blah and blah, or blah and blah. maybe use a raw sql querry?
+    // db
+    //   .Transaction
+    //   .findAll( {
+    //     where: {
+    //       Posted: {
+    //         [ Op.between ]: [ lastWeekStartOfDay, lastWeekEndOfDay ]
+    //       },
+    //        Posted: {
+    //          [ Op.between ]: [
+    //            moment()
+    //              .utc()
+    //              .format(),
+    //            moment()
+    //              .utc()
+    //              .subtract( 1, 'days' )
+    //              .format()
+    //          ]
+    //        }
+    //     } end where statement
+    //   } )
+    //   .then( function ( totalDollarsData ) {
+    //      console.log( 'total dollars data', totalDollarsData );
+    //     res.json( totalDollarsData )
+    //   } )
   } )
 
 } //end module.exports
